@@ -10,6 +10,7 @@ export default function HomePage() {
   const [formMessage, setFormMessage] = useState('');
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
+  const [activeTab, setActiveTab] = useState('uiux');
 
   const handleFormChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -274,31 +275,86 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="projects__grid">
-            {/* Project 1 */}
-            <Link href="/fontora" className="project-card reveal reveal-delay-1">
-              <div className="project-card__thumb">
-                <div className="project-card__thumb-inner" style={{ padding: 0, overflow: 'hidden' }}>
-                  <img src="/assets/Fontora_assets/display.png" alt="Fontora Project Display Card" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                </div>
-              </div>
-              <div className="project-card__body">
-                <h3 className="project-card__title">Fontora</h3>
-                <p className="project-card__desc">Designing the AI That Thinks Like a Designer. A typography assistant in your pocket.</p>
-                <p className="project-card__role">Solo UX Product Designer</p>
-                <div className="project-card__tags">
-                  <span className="project-card__tag">UI/UX Design</span>
-                  <span className="project-card__tag">AI</span>
-                  <span className="project-card__tag">Typography</span>
-                </div>
-              </div>
-              <div className="project-card__arrow">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M7 17L17 7" /><path d="M7 7h10v10" />
-                </svg>
-              </div>
-            </Link>
+          {/* Category Tabs */}
+          <div className="projects__tabs reveal reveal-delay-1">
+            <button
+              className={`projects__tab ${activeTab === 'uiux' ? 'projects__tab--active' : ''}`}
+              onClick={() => setActiveTab('uiux')}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18" /><path d="M9 21V9" /></svg>
+              UI/UX Design
+            </button>
+            <button
+              className={`projects__tab ${activeTab === 'marketing' ? 'projects__tab--active' : ''}`}
+              onClick={() => setActiveTab('marketing')}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10" /><path d="M18 20V4" /><path d="M6 20v-4" /></svg>
+              Graphic Design & Marketing
+            </button>
           </div>
+
+          {/* UI/UX Projects */}
+          {activeTab === 'uiux' && (
+            <div className="projects__grid reveal reveal-delay-2">
+              <Link href="/fontora" className="project-card">
+                <div className="project-card__thumb">
+                  <div className="project-card__thumb-inner" style={{ padding: 0, overflow: 'hidden' }}>
+                    <img src="/assets/Fontora_assets/display.png" alt="Fontora Project Display Card" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                </div>
+                <div className="project-card__body">
+                  <h3 className="project-card__title">Fontora</h3>
+                  <p className="project-card__desc">Designing the AI That Thinks Like a Designer. A typography assistant in your pocket.</p>
+                  <p className="project-card__role">Solo UX Product Designer</p>
+                  <div className="project-card__tags">
+                    <span className="project-card__tag">UI/UX Design</span>
+                    <span className="project-card__tag">AI</span>
+                    <span className="project-card__tag">Typography</span>
+                  </div>
+                </div>
+                <div className="project-card__arrow">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M7 17L17 7" /><path d="M7 7h10v10" />
+                  </svg>
+                </div>
+              </Link>
+              <Link href="/rephraim" className="project-card">
+                <div className="project-card__thumb">
+                  <div className="project-card__thumb-inner" style={{ padding: 0, overflow: 'hidden' }}>
+                    <img src="/assets/Rephraim_assets/display.png" alt="Rephraim Project Display Card" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                </div>
+                <div className="project-card__body">
+                  <h3 className="project-card__title">Rephraim</h3>
+                  <p className="project-card__desc">Because &quot;Can You Send Me the Photos?&quot; Deserved a Better Answer. Collaborative photo sharing.</p>
+                  <p className="project-card__role">Solo UX Product Designer</p>
+                  <div className="project-card__tags">
+                    <span className="project-card__tag">UI/UX Design</span>
+                    <span className="project-card__tag">AI</span>
+                    <span className="project-card__tag">Mobile UX</span>
+                  </div>
+                </div>
+                <div className="project-card__arrow">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M7 17L17 7" /><path d="M7 7h10v10" />
+                  </svg>
+                </div>
+              </Link>
+            </div>
+          )}
+
+          {/* Graphic Design & Marketing Projects */}
+          {activeTab === 'marketing' && (
+            <div className="projects__grid reveal reveal-delay-2">
+              <div className="projects__empty">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 20V10" /><path d="M18 20V4" /><path d="M6 20v-4" />
+                </svg>
+                <h3>Coming Soon</h3>
+                <p>Graphic design & marketing projects are being curated. Check back soon!</p>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
