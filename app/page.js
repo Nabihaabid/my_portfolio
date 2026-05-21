@@ -4,6 +4,54 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Script from 'next/script';
 
+const marketingFolders = {
+  shuFilmFest: {
+    id: 'shuFilmFest',
+    title: 'SHU FilmFest',
+    subtitle: 'Branding & Cinema Promotion',
+    description: 'Branding campaign designed for the SHU Film Festival, incorporating typography-focused visuals, event poster sheets, and digital promotional assets.',
+    folderColor: 'var(--color-accent)',
+    accentColor: '#E07A5F',
+    tags: ['Branding', 'Poster Design', 'Cinema Art'],
+    assets: Array.from({ length: 19 }, (_, i) => ({
+      type: 'image',
+      url: `/assets/Marketing/SHU FilmFest/${i + 1}.png`,
+      title: `SHU FilmFest - Poster Asset #${i + 1}`,
+      tag: i % 2 === 0 ? 'Creative Poster' : 'Promotional Art'
+    }))
+  },
+  shelfToScreen: {
+    id: 'shelfToScreen',
+    title: 'Shelf to Screen Campaigns',
+    subtitle: 'Commercial Content & Retailing Media',
+    description: 'Dynamic commercial designs, motion graphics, retail promotion posters, and brand awareness materials for multi-channel digital campaigns.',
+    folderColor: 'var(--color-lavender)',
+    accentColor: '#B8A9C9',
+    tags: ['Motion Design', 'Retail Ads', 'Social Media'],
+    assets: [
+      { type: 'image', url: '/assets/Marketing/Shelf to Screen Campaigns/3.png', title: 'Shelf to Screen - Key Concept Poster', tag: 'Concept Poster' },
+      { type: 'image', url: '/assets/Marketing/Shelf to Screen Campaigns/4.png', title: 'Shelf to Screen - Secondary Creative', tag: 'Key Visual' },
+      { type: 'image', url: '/assets/Marketing/Shelf to Screen Campaigns/20260119_2103_Image Generation_remix_01kfbfvxvve24t85h9rfd1c96w.png', title: 'AI Remix Illustration', tag: 'Concept Art' },
+      { type: 'image', url: '/assets/Marketing/Shelf to Screen Campaigns/Copy of Copy of Copy of Copy of onestop (10).png', title: 'OneStop Retail Post 1', tag: 'Social Media' },
+      { type: 'image', url: '/assets/Marketing/Shelf to Screen Campaigns/Copy of Copy of Copy of Copy of onestop (29).png', title: 'OneStop Retail Post 2', tag: 'Social Media' },
+      { type: 'image', url: '/assets/Marketing/Shelf to Screen Campaigns/Copy of Copy of pREMIER (14).png', title: 'Premier Retail Poster Ad', tag: 'Retail Ad' },
+      { type: 'image', url: '/assets/Marketing/Shelf to Screen Campaigns/Copy of premier  (1).png', title: 'Premier Retail Story Highlight', tag: 'Retail Ad' },
+      { type: 'image', url: '/assets/Marketing/Shelf to Screen Campaigns/Copy of premier new post  (4).png', title: 'Premier New Launch Post', tag: 'Social Media' },
+      { type: 'image', url: '/assets/Marketing/Shelf to Screen Campaigns/Halloween (5).png', title: 'OneStop Halloween Discount', tag: 'Seasonal Event' },
+      { type: 'image', url: '/assets/Marketing/Shelf to Screen Campaigns/OneStop Merry Christmas Instagram Post (11).png', title: 'OneStop Christmas Promotion', tag: 'Seasonal Event' },
+      { type: 'image', url: '/assets/Marketing/Shelf to Screen Campaigns/Onestop (51).png', title: 'OneStop Store Opening Special', tag: 'Retail Ad' },
+      { type: 'video', url: '/assets/Marketing/Shelf to Screen Campaigns/Orange Modern Coming Soon Your Story (5).mp4', title: 'Orange Modern Coming Soon Story', tag: 'Motion Graphic' },
+      { type: 'image', url: '/assets/Marketing/Shelf to Screen Campaigns/_onestop (8).png', title: 'OneStop Retail Promotion', tag: 'Social Media' },
+      { type: 'image', url: '/assets/Marketing/Shelf to Screen Campaigns/new premier shop post  (4).png', title: 'Premier Grand Opening Ad', tag: 'Retail Ad' },
+      { type: 'image', url: '/assets/Marketing/Shelf to Screen Campaigns/new premier shop post  (8).png', title: 'Premier Special Store Offer', tag: 'Retail Ad' },
+      { type: 'video', url: '/assets/Marketing/Shelf to Screen Campaigns/new.mp4', title: 'Premier Promotional Campaign Video', tag: 'Motion Graphic' },
+      { type: 'image', url: '/assets/Marketing/Shelf to Screen Campaigns/only!.jpg', title: 'Limited Promo Banner', tag: 'Print Flyer' },
+      { type: 'image', url: '/assets/Marketing/Shelf to Screen Campaigns/£12..jpg', title: '£12 In-Store Offer Promo', tag: 'Print Flyer' },
+      { type: 'image', url: '/assets/Marketing/Shelf to Screen Campaigns/£6.50.jpg', title: '£6.50 Hot Meal Deal Ad', tag: 'Print Flyer' }
+    ]
+  }
+};
+
 export default function HomePage() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
   const [formStatus, setFormStatus] = useState('idle'); // idle | loading | success | error
@@ -11,6 +59,8 @@ export default function HomePage() {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
   const [activeTab, setActiveTab] = useState('uiux');
+  const [activeSubFolder, setActiveSubFolder] = useState(null); // null | 'shuFilmFest' | 'shelfToScreen'
+  const [lightboxIndex, setLightboxIndex] = useState(null); // null | number
 
   const handleFormChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -279,14 +329,20 @@ export default function HomePage() {
           <div className="projects__tabs reveal reveal-delay-1">
             <button
               className={`projects__tab ${activeTab === 'uiux' ? 'projects__tab--active' : ''}`}
-              onClick={() => setActiveTab('uiux')}
+              onClick={() => {
+                setActiveTab('uiux');
+                setActiveSubFolder(null);
+              }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M3 9h18" /><path d="M9 21V9" /></svg>
               UI/UX Design
             </button>
             <button
               className={`projects__tab ${activeTab === 'marketing' ? 'projects__tab--active' : ''}`}
-              onClick={() => setActiveTab('marketing')}
+              onClick={() => {
+                setActiveTab('marketing');
+                setActiveSubFolder(null);
+              }}
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 20V10" /><path d="M18 20V4" /><path d="M6 20v-4" /></svg>
               Graphic Design & Marketing
@@ -295,7 +351,29 @@ export default function HomePage() {
 
           {/* UI/UX Projects */}
           {activeTab === 'uiux' && (
-            <div className="projects__grid reveal reveal-delay-2">
+            <div className="projects__grid">
+              <Link href="/onestop" className="project-card">
+                <div className="project-card__thumb">
+                  <div className="project-card__thumb-inner" style={{ padding: 0, overflow: 'hidden' }}>
+                    <img src="/assets/Onestop_assets/coverimage.png" alt="One Stop Project Display Card" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </div>
+                </div>
+                <div className="project-card__body">
+                  <h3 className="project-card__title">One Stop</h3>
+                  <p className="project-card__desc">Redesigning a grocery convenience app for clarity, speed, and real shopper needs.</p>
+                  <p className="project-card__role">Solo UX Product Designer</p>
+                  <div className="project-card__tags">
+                    <span className="project-card__tag">UI/UX Design</span>
+                    <span className="project-card__tag">E-Commerce</span>
+                    <span className="project-card__tag">Mobile UX</span>
+                  </div>
+                </div>
+                <div className="project-card__arrow">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M7 17L17 7" /><path d="M7 7h10v10" />
+                  </svg>
+                </div>
+              </Link>
               <Link href="/fontora" className="project-card">
                 <div className="project-card__thumb">
                   <div className="project-card__thumb-inner" style={{ padding: 0, overflow: 'hidden' }}>
@@ -340,19 +418,189 @@ export default function HomePage() {
                   </svg>
                 </div>
               </Link>
+              <Link href="/pizzeria" className="project-card">
+                <div className="project-card__thumb">
+                  <div className="project-card__thumb-inner">
+                    <div className="project-visual project-visual--2">
+                      <div className="project-visual__mockup">
+                        <div className="project-visual__mockup-bar">
+                          <span className="project-visual__mockup-dot"></span>
+                          <span className="project-visual__mockup-dot"></span>
+                          <span className="project-visual__mockup-dot"></span>
+                        </div>
+                        <div className="project-visual__mockup-body">
+                          <div className="project-visual__mockup-line project-visual__mockup-line--short"></div>
+                          <div className="project-visual__mockup-line project-visual__mockup-line--accent"></div>
+                          <div className="project-visual__mockup-grid">
+                            <div className="project-visual__mockup-card"></div>
+                            <div className="project-visual__mockup-card"></div>
+                            <div className="project-visual__mockup-card"></div>
+                            <div className="project-visual__mockup-card"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="project-card__body">
+                  <h3 className="project-card__title">Pizzeria</h3>
+                  <p className="project-card__desc">We Just Wanted Ordering Pizza to Feel as Good as Eating It.</p>
+                  <p className="project-card__role">Solo Product Designer</p>
+                  <div className="project-card__tags">
+                    <span className="project-card__tag">UI/UX Design</span>
+                    <span className="project-card__tag">Mobile UX</span>
+                    <span className="project-card__tag">Food &amp; Delivery</span>
+                  </div>
+                </div>
+                <div className="project-card__arrow">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M7 17L17 7" /><path d="M7 7h10v10" />
+                  </svg>
+                </div>
+              </Link>
             </div>
           )}
 
           {/* Graphic Design & Marketing Projects */}
           {activeTab === 'marketing' && (
-            <div className="projects__grid reveal reveal-delay-2">
-              <div className="projects__empty">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 20V10" /><path d="M18 20V4" /><path d="M6 20v-4" />
-                </svg>
-                <h3>Coming Soon</h3>
-                <p>Graphic design & marketing projects are being curated. Check back soon!</p>
-              </div>
+            <div style={{ width: '100%' }}>
+              {activeSubFolder === null ? (
+                <div className="marketing-folders">
+                  {Object.values(marketingFolders).map((folder) => (
+                    <button
+                      key={folder.id}
+                      className="folder-card"
+                      onClick={() => setActiveSubFolder(folder.id)}
+                    >
+                      <div className="folder-card__tab-wrapper">
+                        <div className="folder-card__icon-container" style={{ '--accent-color': folder.accentColor }}>
+                          {/* Premium Custom Folder SVG */}
+                          <svg className="folder-card__svg" viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path className="folder-card__back" d="M10 10C10 7.79086 11.7909 6 14 6H38L46 16H86C88.2091 16 90 17.7909 90 20V70C90 72.2091 88.2091 74 86 74H14C11.7909 74 10 72.2091 10 70V10Z" fill="var(--color-bg-alt)" stroke="var(--color-border)" strokeWidth="2"/>
+                            
+                            {/* Peeking preview files inside folder */}
+                            <g className="folder-card__peeking-files">
+                              <rect x="25" y="16" width="36" height="46" rx="4" fill="white" transform="rotate(-6 25 16)" stroke="var(--color-border)" strokeWidth="1.5" />
+                              <rect x="42" y="12" width="36" height="46" rx="4" fill="white" transform="rotate(4 42 12)" stroke="var(--color-border)" strokeWidth="1.5" />
+                            </g>
+                            
+                            <path className="folder-card__front" d="M10 24C10 21.7909 11.7909 20 14 20H86C88.2091 20 90 21.7909 90 24V70C90 72.2091 88.2091 74 86 74H14C11.7909 74 10 72.2091 10 70V24Z" fill="white" stroke="var(--color-border)" strokeWidth="2"/>
+                          </svg>
+                          
+                          {/* Floating Accent Circle */}
+                          <div className="folder-card__accent-circle" style={{ background: folder.accentColor }}>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="folder-card__body">
+                        <span className="folder-card__count">{folder.assets.length} Creative Assets</span>
+                        <h3 className="folder-card__title">{folder.title}</h3>
+                        <p className="folder-card__desc">{folder.subtitle}</p>
+                        <div className="folder-card__tags">
+                          {folder.tags.map((t, idx) => (
+                            <span key={idx} className="folder-card__tag">{t}</span>
+                          ))}
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                /* Selected Folder Gallery View */
+                <div className="gallery-container">
+                  {/* Gallery Navigation Header */}
+                  <div className="gallery-header">
+                    <button className="btn btn--secondary gallery-back" onClick={() => setActiveSubFolder(null)}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ transform: 'rotate(180deg)', marginRight: '4px' }}>
+                        <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
+                      </svg>
+                      Back to Folders
+                    </button>
+                    <div className="gallery-breadcrumbs">
+                      <span>Featured Work</span>
+                      <span className="breadcrumb-separator">/</span>
+                      <span>Graphic Design & Marketing</span>
+                      <span className="breadcrumb-separator">/</span>
+                      <span className="breadcrumb-active">{marketingFolders[activeSubFolder].title}</span>
+                    </div>
+                  </div>
+
+                  {/* Folder Intro Card */}
+                  <div className="gallery-intro-card" style={{ borderLeft: `4px solid ${marketingFolders[activeSubFolder].accentColor}` }}>
+                    <div className="gallery-intro-card__content">
+                      <div className="gallery-intro-card__text">
+                        <h2>{marketingFolders[activeSubFolder].title}</h2>
+                        <p>{marketingFolders[activeSubFolder].description}</p>
+                      </div>
+
+                      {activeSubFolder === 'shuFilmFest' && (
+                        <a 
+                          href="https://www.instagram.com/film_fest_shu?igsh=MXNxejByNG95ZHh2Zw==" 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="instagram-campaign-banner"
+                        >
+                          <div className="instagram-campaign-banner__icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                          </div>
+                          <div className="instagram-campaign-banner__text">
+                            <span className="instagram-campaign-banner__label">Campaign Link</span>
+                            <span className="instagram-campaign-banner__title">To see the full Gen Z-focused Instagram campaign, visit @film_fest_shu →</span>
+                          </div>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Media Grid */}
+                  <div className="gallery-grid">
+                    {marketingFolders[activeSubFolder].assets.map((asset, index) => (
+                      <div 
+                        key={index} 
+                        className="gallery-card"
+                        onClick={() => {
+                          setLightboxIndex(index);
+                        }}
+                      >
+                        <div className="gallery-card__media-wrapper">
+                          {asset.type === 'video' ? (
+                            <div className="gallery-card__video-preview">
+                              <video 
+                                src={asset.url} 
+                                muted 
+                                loop 
+                                playsInline 
+                                autoPlay
+                              />
+                              <div className="gallery-card__video-badge">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                                Video
+                              </div>
+                            </div>
+                          ) : (
+                            <img 
+                              src={asset.url} 
+                              alt={asset.title} 
+                              loading="lazy" 
+                            />
+                          )}
+                          <div className="gallery-card__hover-overlay">
+                            <span className="gallery-card__hover-icon">
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                            </span>
+                          </div>
+                        </div>
+                        <div className="gallery-card__body">
+                          <span className="gallery-card__tag" style={{ color: marketingFolders[activeSubFolder].accentColor, background: `${marketingFolders[activeSubFolder].accentColor}1A` }}>{asset.tag}</span>
+                          <h4 className="gallery-card__title">{asset.title}</h4>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -526,6 +774,67 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+
+
+      {/* Lightbox Modal */}
+      {lightboxIndex !== null && activeSubFolder && (
+        <div className="marketing-lightbox" onClick={() => setLightboxIndex(null)}>
+          <button className="marketing-lightbox__close" onClick={() => setLightboxIndex(null)} aria-label="Close Lightbox">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+          
+          <button 
+            className="marketing-lightbox__nav marketing-lightbox__nav--prev" 
+            onClick={(e) => {
+              e.stopPropagation();
+              const total = marketingFolders[activeSubFolder].assets.length;
+              setLightboxIndex((prev) => (prev === 0 ? total - 1 : prev - 1));
+            }}
+            aria-label="Previous Media"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+
+          <button 
+            className="marketing-lightbox__nav marketing-lightbox__nav--next" 
+            onClick={(e) => {
+              e.stopPropagation();
+              const total = marketingFolders[activeSubFolder].assets.length;
+              setLightboxIndex((prev) => (prev === total - 1 ? 0 : prev + 1));
+            }}
+            aria-label="Next Media"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+
+          <div className="marketing-lightbox__content" onClick={(e) => e.stopPropagation()}>
+            <div className="marketing-lightbox__media-container">
+              {marketingFolders[activeSubFolder].assets[lightboxIndex].type === 'video' ? (
+                <video 
+                  src={marketingFolders[activeSubFolder].assets[lightboxIndex].url} 
+                  controls 
+                  autoPlay 
+                  loop 
+                  className="marketing-lightbox__video"
+                />
+              ) : (
+                <img 
+                  src={marketingFolders[activeSubFolder].assets[lightboxIndex].url} 
+                  alt={marketingFolders[activeSubFolder].assets[lightboxIndex].title} 
+                  className="marketing-lightbox__image"
+                />
+              )}
+            </div>
+            <div className="marketing-lightbox__caption">
+              <span className="marketing-lightbox__tag" style={{ color: marketingFolders[activeSubFolder].accentColor }}>
+                {marketingFolders[activeSubFolder].assets[lightboxIndex].tag}
+              </span>
+              <h3 className="marketing-lightbox__title">{marketingFolders[activeSubFolder].assets[lightboxIndex].title}</h3>
+              <p className="marketing-lightbox__index">{lightboxIndex + 1} / {marketingFolders[activeSubFolder].assets.length}</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       <Script src="/js/main.js" strategy="afterInteractive" />
     </>
